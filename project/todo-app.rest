@@ -1,0 +1,20 @@
+### GET /
+GET http://localhost:5000
+
+### Register a user POST /auth/register
+POST http://localhost:5000/auth/register
+Content-Type: application/json
+
+{
+    "username": "aditya@gmail.com",
+    "password": "123123123"
+}
+
+### Login a user POST /auth/login
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "username": "aditya@gmail.com",
+    "password": "123123123"
+}

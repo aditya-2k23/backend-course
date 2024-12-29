@@ -1,0 +1,20 @@
+### TEST GET / (homepage) website
+GET http://localhost:8383/
+
+### TEST GET /dashboard website
+GET http://localhost:8383/dashboard
+
+### TEST GET /api/data endpoint
+GET http://localhost:8383/api/data
+
+### TEST POST /api/data endpoint for creating a user
+POST http://localhost:8383/api/data
+Content-Type: application/json
+
+{
+    "name": "John Doe"
+}
+
+### TEST DELETE /api/data endpoint for deleting a user
+
+DELETE http://localhost:8383/api/data
