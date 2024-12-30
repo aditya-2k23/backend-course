@@ -116,3 +116,150 @@ const prisma = new PrismaClient();
 
 export default prisma;
 ```
+
+### Create a new User (Register endpoint)
+
+Now, in the `authRoutes.js` file, we can create a new user by updating the existing logic to use Prisma to create a new user.
+
+```javascript
+import prisma from "../prismaClient.js";
+
+/*
+ ---
+ Other code ↕
+ ---
+*/
+
+// Register a new user endpoint /auth/register route
+router.post("/register", async (req, res) => {
+  // async function to handle the requests
+  const { username, password } = req.body;
+  console.log(username, password);
+
+  // TODO encrypt the password using bcrypt
+  const hashedPassword = bcrypt.hashSync(password, 8);
+
+  // save the new user and the password to the db
+  try {
+    const user = await prisma.user.create({
+      data: {
+        username,
+        password: hashedPassword,
+      },
+    });
+
+    // We have a user now, let's add a default todo for the users
+    const defaultTodo = `Hello ${username}! Add your first todo!`;
+
+    await prisma.todo.create({
+      data: {
+        task: defaultTodo,
+        userId: user.id,
+      },
+    });
+
+    // Create a JWT token
+    const token = jwt.sign(
+      {
+        id: user.id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "24h",
+      }
+    );
+    res.json({ token }); // send the token back to the client
+  } catch (error) {
+    console.log(error.message);
+    res.sendStatus(503); // 503: Service Unavailable
+  }
+
+  res.sendStatus(201); // 201: Created
+});
+```
+
+You can compare the above code with the previous project to see the difference. [Here](../project/src/routes/authRoutes.js) is the link to the previous project's code.
+We are now using Prisma to create a new user instead of using the SQL queries.
+
+### Login a User (Login endpoint)
+
+Now, in the `authRoutes.js` file, we can update the login endpoint to use Prisma to find a user by username and verify the password.
+
+```javascript
+router.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    const user = await prisma.user.findUnique({
+      // ? The findUnique method is used to retrieve a single user from the database based on a unique identifier which in this case is the username
+      where: {
+        username: username,
+      },
+    });
+
+    // If we cannot find a user associated with that username, return out of the function
+    if (!user) {
+      return res.status(404).send({ message: "User not found" });
+    }
+
+    const passwordIsValid = bcrypt.compareSync(password, user.password);
+    // IF the password is not valid, return an error
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        message: "Invalid password",
+      });
+    }
+    console.log(user);
+
+    // After all the checks above we have a successful authentication
+    const token = jwt.sign(
+      {
+        id: user.id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "24h",
+      }
+    );
+    res.json({ token });
+  } catch (error) {
+    console.log(error.message);
+    res.sendStatus(503); // 503: Service Unavailable
+  }
+});
+```
+
+You can again compare the above code with the previous project to see the difference. [Here](../project/src/routes/authRoutes.js) is the link to the previous project's code.
+We are now using Prisma to find an existing user by username instead of using the SQL queries.
+
+### Get all Todos (Get all todos endpoint)
+
+Now, in the `todoRoutes.js` file, we can update the get all todos endpoint to use Prisma to find all the todos associated with a user.
+
+```javascript
+import prisma from "../prismaClient.js";
+
+/*
+ ---
+ Other code ↕
+ ---
+*/
+
+// Get all todos for logged-in user
+router.get("/", async (req, res) => {
+  const todos = await prisma.todo.findMany({
+    // ? The findMany method is used to retrieve all todos from the database as an array of objects
+    where: {
+      userId: req.userId,
+    },
+  });
+
+  res.json(todos);
+});
+```
+
+You can compare the above code with the previous project to see the difference. [Here](../project/src/routes/todoRoutes.js) is the link to the previous project's code.
+
+Again, you can get all the information regarding the functions used here such as findMany or findUnique from the [Prisma documentation](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/querying-the-database-typescript-sqlserver)
+
+### Create a new Todo (Create a new todo endpoint)
