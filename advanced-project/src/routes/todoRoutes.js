@@ -1,15 +1,17 @@
 import express from "express";
 import db from "../db.js";
+import prisma from "../prismaClient.js";
 
 const router = express.Router();
 
 // Get all todos for logged-in user
-router.get("/", (req, res) => {
-  const getTodos = db.prepare(`
-        SELECT * FROM todos
-        WHERE user_id = ?
-    `);
-  const todos = getTodos.all(req.userId); // ? req.userID is the id of the logged-in user
+router.get("/", async (req, res) => {
+  const todos = await prisma.todo.findMany({
+    // ? The findMany method is used to retrieve all todos from the database as an array of objects
+    where: {
+      userId: req.userId,
+    },
+  });
 
   res.json(todos);
 });
