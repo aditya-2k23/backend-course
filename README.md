@@ -1,6 +1,6 @@
 # Backend Course by me and Smoljames :)
 
-## Basics
+## 1. Basics
 
 See the [basics](basics) folder for the basics of the course.
 
@@ -14,7 +14,7 @@ In it we will learn about:
 - Routing
 - HTTP Methods
 
-## Project
+## 2. Basic Project
 
 See the [project](project) folder for the project of the course.
 
@@ -27,6 +27,19 @@ In it we will learn about:
 - Managing routes
 - Managing middleware using a secret key
 - Advanced HTTP methods
+
+## 3. Advanced Project
+
+See the [advanced-project](advanced-project) folder for the advanced project of the course.
+
+Follow the instructions in the README.md file in that folder.
+
+In it we will learn about:
+
+- PostgresSQL database
+- Sequelize ORM (Object Relational Mapping)
+- Use Prisma ORM to manage the database
+- Dockerize the project
 
 ## Collaborated with Smoljames
 
