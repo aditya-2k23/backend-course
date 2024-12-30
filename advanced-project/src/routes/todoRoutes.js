@@ -17,15 +17,17 @@ router.get("/", async (req, res) => {
 });
 
 // Create a new todo
-router.post("/", (req, res) => {
+router.post("/", async (req, res) => {
   const { task } = req.body;
-  const insertTodo = db.prepare(`
-        INSERT INTO todos (user_id, task)
-        VALUES (?, ?)
-    `);
-  const result = insertTodo.run(req.userId, task); // *
 
-  res.json({ id: result.lastInsertRowid, task, completed: 0 });
+  const todo = await prisma.todo.create({
+    data: {
+      task,
+      userId: req.userId,
+    },
+  });
+
+  res.json(todo);
 });
 
 // Update a todo

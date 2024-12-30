@@ -263,3 +263,23 @@ You can compare the above code with the previous project to see the difference. 
 Again, you can get all the information regarding the functions used here such as findMany or findUnique from the [Prisma documentation](https://www.prisma.io/docs/getting-started/setup-prisma/start-from-scratch/relational-databases/querying-the-database-typescript-sqlserver)
 
 ### Create a new Todo (Create a new todo endpoint)
+
+Now, in the `todoRoutes.js` file, we can update the create a new todo endpoint to use Prisma to create a new todo associated with a user.
+
+```javascript
+// Create a new todo
+router.post("/", async (req, res) => {
+  const { task } = req.body;
+
+  const todo = await prisma.todo.create({
+    data: {
+      task,
+      userId: req.userId,
+    },
+  });
+
+  res.json(todo);
+});
+```
+
+You can compare the above code with the previous project to see the difference. [Here](../project/src/routes/todoRoutes.js) is the link to the previous project's code.
