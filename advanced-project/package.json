@@ -1,0 +1,22 @@
+{
+  "name": "advanced-full-stack-todo-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch --env-file=.env --experimental-strip-types --experimental-sqlite ./src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Aditya",
+  "license": "ISC",
+  "description": "A dockerize full stack todo application that uses a NODEJS backend, a PostgreSQL database, a Prisma ORM, and JWT Authentication.",
+  "dependencies": {
+    "@prisma/client": "^6.1.0",
+    "bcryptjs": "^2.4.3",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.13.1",
+    "prisma": "^6.1.0"
+  }
+}
