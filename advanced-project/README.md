@@ -41,3 +41,78 @@ Then, you can able to see the `package.json` updated with the new dependencies.
   }
 }
 ```
+
+Now, we run the following command to create a new Prisma schema file:
+
+```bash
+npx prisma init
+```
+
+By running the above command, you will see a new folder called `prisma` created in the root directory of the project. Inside the `prisma` folder, you will see a new file called `schema.prisma`. This file is used to define the database schema. No, inside of which we can define our two models (tables), `User` and `Task`.
+
+```prisma
+model User {
+    id        Int      @id @default(autoincrement())
+    username  String   @unique
+    password  String
+    todos     Todo[]
+}
+
+model Todo {
+    id        Int      @id @default(autoincrement())
+    task      String
+    completed Boolean  @default(false)
+    userId    Int
+    user      User     @relation(fields: [userId], references: [id])
+}
+```
+
+You must be able to see that these models are the same as the ones we defined in the previous project. The only difference is that they were created using the SQL queries but here we are using Prisma to define the models.
+
+Your, `schema.prisma` file should look like this:
+
+```prisma
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+    id        Int      @id @default(autoincrement())
+    username  String   @unique
+    password  String
+    todos     Todo[]
+}
+
+model Todo {
+    id        Int      @id @default(autoincrement())
+    task      String
+    completed Boolean  @default(false)
+    userId    Int
+    user      User     @relation(fields: [userId], references: [id])
+}
+```
+
+You can learn more on the Prisma schema by the link given in the above code comments.
+
+### Setup Prisma Client
+
+You now have to create a `prismaClient.js` file in the `src` directory of your `advanced-project`. This file will be used to create a new instance of the Prisma Client.
+
+```javascript
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
+
+export default prisma;
+```
