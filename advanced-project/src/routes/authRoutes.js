@@ -2,11 +2,12 @@ import express from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import db from "../db.js";
+import prisma from "../prismaClient.js";
 
 const router = express.Router();
 
 // Register a new user endpoint /auth/register route
-router.post("/register", (req, res) => {
+router.post("/register", async (req, res) => {
   const { username, password } = req.body;
   console.log(username, password);
 
@@ -15,24 +16,27 @@ router.post("/register", (req, res) => {
 
   // save the new user and the password to the db
   try {
-    const insertUser = db.prepare(`
-        INSERT INTO users (username, password)
-        VALUES (?, ?)
-    `);
-    const result = insertUser.run(username, hashedPassword);
+    const user = await prisma.user.create({
+      data: {
+        username,
+        password: hashedPassword,
+      },
+    });
 
     // We have a user now, let's add a default todo for the users
     const defaultTodo = `Hello ${username}! Add your first todo!`;
-    const insertTodo = db.prepare(`
-        INSERT INTO todos (user_id, task)
-        VALUES (?, ?)
-    `);
-    insertTodo.run(result.lastInsertRowid, defaultTodo); // ? lastInsertRowid is the most recent new id of the user we just inserted
+
+    await prisma.todo.create({
+      data: {
+        task: defaultTodo,
+        userId: user.id,
+      },
+    });
 
     // Create a JWT token
     const token = jwt.sign(
       {
-        id: result.lastInsertRowid,
+        id: user.id,
       },
       process.env.JWT_SECRET,
       {
@@ -48,15 +52,16 @@ router.post("/register", (req, res) => {
   res.sendStatus(201); // 201: Created
 });
 
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    const getUser = db.prepare(`
-        SELECT * FROM users
-        WHERE username = ?
-    `);
-    const user = getUser.get(username);
+    const user = await prisma.user.findUnique({
+      // ? The findUnique method is used to retrieve a single user from the database based on a unique identifier which in this case is the username
+      where: {
+        username: username,
+      },
+    });
 
     // If we cannot find a user associated with that username, return out of the function
     if (!user) {
