@@ -283,3 +283,52 @@ router.post("/", async (req, res) => {
 ```
 
 You can compare the above code with the previous project to see the difference. [Here](../project/src/routes/todoRoutes.js) is the link to the previous project's code.
+
+### Update a Todo (Update a todo endpoint)
+
+Now, in the `todoRoutes.js` file, we can update the update a todo endpoint to use Prisma to update a todo associated with a user.
+
+```javascript
+// Update a todo
+router.put("/:id", async (req, res) => {
+  const { completed } = req.body;
+  const { id } = req.params; // ? req.params is an object containing properties mapped to the named route “parameters”. For example, if you have the route /user/:name, then the “name” property is available as req.params.name. This object defaults to {}.
+
+  const updatedTodo = await prisma.todo.update({
+    where: {
+      id: parseInt(id),
+      userId: req.userId,
+    },
+    data: {
+      completed: !!completed, // ? The double exclamation mark (!!) is used to convert the value of "completed" to a boolean
+    },
+  });
+
+  res.json(updatedTodo);
+});
+```
+
+You can compare the above code with the previous project to see the difference. [Here](../project/src/routes/todoRoutes.js) is the link to the previous project's code.
+
+### Delete a Todo (Delete a todo endpoint)
+
+Now, in the `todoRoutes.js` file, we can update the delete a todo endpoint to use Prisma to delete a todo associated with a user.
+
+```javascript
+// Delete a todo
+router.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  const userId = req.userId;
+
+  await prisma.todo.delete({
+    where: {
+      id: parseInt(id),
+      userId,
+    },
+  });
+
+  res.send({ message: "Todo deleted!" });
+});
+```
+
+You can compare the above code with the previous project to see the difference. [Here](../project/src/routes/todoRoutes.js) is the link to the previous project's code.
