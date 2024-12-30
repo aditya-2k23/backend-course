@@ -687,3 +687,129 @@ router.get("/", (req, res) => {
 This code will get all the todos for the logged-in user from the `todos` table and send them back to the client. The `req.userId` is the id of the logged-in user that was attached to the `req` object by the `authMiddleware`.
 
 ### 2. Create a new todo (Create using POST request)
+
+In your `todoRoutes.js` file, update the `/` route to create a new todo:
+
+```javascript
+// Create a new todo
+router.post("/", (req, res) => {
+  const { task } = req.body;
+  const insertTodo = db.prepare(`
+        INSERT INTO todos (user_id, task)
+        VALUES (?, ?)
+    `);
+  const result = insertTodo.run(req.userId, task);
+
+  res.json({ id: result.lastInsertRowid, task, completed: 0 });
+});
+```
+
+This code will insert a new todo for the logged-in user in the `todos` table and send the id, task, and completed status of the new todo back to the client. The `req.userId` is the id of the logged-in user that was attached to the `req` object by the `authMiddleware`.
+
+### 3. Update a todo (Update using PUT request)
+
+In your `todoRoutes.js` file, update the `/:id` route to update a todo:
+
+```javascript
+// Update a todo
+router.put("/:id", (req, res) => {
+  const { completed } = req.body;
+  const { id } = req.params;
+  const { page } = req.query;
+
+  const updatedTodo = db.prepare(`
+    UPDATE todos SET completed = ?
+    WHERE id = ?
+  `);
+
+  updatedTodo.run(completed, id); // ? This will update the completed status of the todo with the given id
+
+  res.json({ message: "Todo completed!" });
+}); // ?: The ":id" is used to capture the id of the todo that we want to update
+```
+
+This code will update the completed status of the todo with the given id in the `todos` table and send a message back to the client.
+
+`req.params` is an object containing properties mapped to the named route `parameters`. For example, if you have the route `/user/:name`, then the `name`property is available as `req`.params.name. This object defaults to {}.
+
+`req.query` is an object containing a property for each query string parameter in the route. If there is no query string, it is an empty object: {}. For example, if you have the route `/search?q=toby`, then the `q` property is available as `req.query.q`.
+
+### 4. Delete a todo (Delete using DELETE request)
+
+In your `todoRoutes.js` file, update the `/:id` route to delete a todo:
+
+```javascript
+// Delete a todo
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  const deleteTodo = db.prepare(`
+    DELETE FROM todos
+    WHERE id = ? AND user_id = ?
+  `);
+
+  deleteTodo.run(id, req.userId); // ? This will delete the todo with the given id
+  res.send({ message: "Todo deleted!" });
+}); // ?: Same as above, the ":id" is used to capture the id of the todo that we want to delete
+```
+
+This code will delete the todo with the given id in the `todos` table and send a message back to the client. The `req.userId` is the id of the logged-in user that was attached to the `req` object by the `authMiddleware`.
+
+### 5. \*Optional Testing the API endpoints
+
+You can test the API endpoints using the `todo-app.rest` file. This file contains the requests to test the API endpoints. You can try and run the following requests:
+
+- GET all todos (basically the home page for a logged in user)
+
+#### Fetch all todos GET /todos (protected)
+
+```http
+GET http://localhost:5000/todos
+Authorization: ${token}
+```
+
+#### Create a todo POST /todos (protected)
+
+```http
+POST http://localhost:5000/todos
+Authorization: ${token}
+Content-Type: application/json
+
+{
+    "task": "Finish coding the projects"
+}
+```
+
+### Update a todo PUT /todos/:id (protected)
+
+```http
+PUT http://localhost:5000/todos/2?page=4
+Authorization: ${token}
+Content-Type: application/json
+
+{
+    "completed": 1
+}
+```
+
+### Delete a todo DELETE /todos/:id (protected)
+
+```
+DELETE http://localhost:5000/todos/2
+Authorization: ${token}
+```
+
+In place of the `${token}`, you can use the token that you received when you registered or logged in. You can access that token from the response message shown in the rest client output window.
+
+You can try running these requests to test the API endpoints. You can further explore the API endpoints by adding more requests to the `todo-app.rest` file.
+
+---
+
+## Conclusion
+
+By following all the steps above, you have successfully created a full stack todo application that allows users to create, read, update, and delete todos.
+
+You have learned how to set up the backend server, link the frontend to the backend, set up the database, create the routes, encrypt the user's password, store the user's data in the database, authenticate the user, implement the CRUD operations, and test the API endpoints.
+
+You can further explore the project by adding more features to the application, such as updating the user's data, adding more fields to the todos, adding more routes, undo delete, and more.
+
+I hope you enjoyed creating this full stack todo application and learned something new.
