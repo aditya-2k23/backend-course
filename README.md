@@ -45,6 +45,7 @@ Follow the README.md file in the [project](project) folder for step-by-step guid
 ### 3. Advanced Project (Work in Progress)
 
 The [advanced-project](advanced-project) folder will push your skills further by introducing modern technologies and advanced backend practices. Stay tuned as we continue building this exciting section!
+(This section of the project hasn't been completed yet. Stay tuned for updates and enjoy the course at its finest soon!)
 
 #### What you'll learn:
 
