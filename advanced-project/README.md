@@ -332,3 +332,51 @@ router.delete("/:id", async (req, res) => {
 ```
 
 You can compare the above code with the previous project to see the difference. [Here](../project/src/routes/todoRoutes.js) is the link to the previous project's code.
+
+## Dockerize the application
+
+Now, we can create a `Dockerfile` in the root directory of the project. This file will be used to build the Docker image for the application.
+
+Here Image refers to a snapshot of the application that can be run in a container. **A container is a running instance of an image.**
+
+```Dockerfile
+# Docker Instruction Sheet
+# Use official node.js runtime as a parent image.
+# Here image refers not to a picture but to a container, basically a snapshot of that container.
+
+FROM node:22-alpine
+
+# Set the working directory in the container to /app.
+WORKDIR /app
+
+# Copy the package.json and package-lock.json files to the container at /app.
+COPY package*.json .
+
+# Install the dependencies.
+RUN npm install
+
+# Copy the rest of the application code to the container at /app.
+COPY . .
+
+# Expose the port the app runs on.
+EXPOSE 5000
+
+# Define the command to run the application when the container starts.
+CMD ["node", "./src/server.js"]
+```
+
+Most of the code above has been explained briefly in the comments of the Docker instruction sheet.
+
+You can learn more about the Dockerfile and the instructions used in the Dockerfile from the [Docker documentation](https://docs.docker.com/engine/reference/builder/)
+
+### Since we are going to run the application as a container, we are not using the flags that we defined in the run script in `package.json` file.
+
+So, we need to make sure that we are not involving any SQLite database inside of our application, as we are using PostgreSQL as our database. So, we need to update some files where we are using SQLite as out database.
+
+#### `authRoutes.js` and `todoRoutes.js`
+
+```javascript
+import db from "../db.js"; // We don't have to delete the `db.js` file, we just need to delete the imports...
+```
+
+So, by this, we are almost ready to build our container.
