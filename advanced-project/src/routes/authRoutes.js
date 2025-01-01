@@ -13,8 +13,17 @@ router.post("/register", async (req, res) => {
   // TODO encrypt the password using bcrypt
   const hashedPassword = bcrypt.hashSync(password, 8);
 
-  // save the new user and the password to the db
   try {
+    // Check if the username already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { username },
+    });
+
+    if (existingUser) {
+      return res.status(409).json({ message: "Username already exists" });
+    }
+
+    // Save the new user and the password to the db
     const user = await prisma.user.create({
       data: {
         username,
@@ -42,13 +51,13 @@ router.post("/register", async (req, res) => {
         expiresIn: "24h",
       }
     );
-    res.json({ token }); // send the token back to the client
+
+    // Send the token back to the client
+    res.status(201).json({ token }); // Use 201 to indicate resource creation
   } catch (error) {
     console.log(error.message);
     res.sendStatus(503); // 503: Service Unavailable
   }
-
-  res.sendStatus(201); // 201: Created
 });
 
 router.post("/login", async (req, res) => {
