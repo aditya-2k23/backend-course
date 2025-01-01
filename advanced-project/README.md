@@ -392,3 +392,45 @@ npx prisma generate
 ```
 
 This command will generate a new file called `prisma/schema.prisma` and it will be saved on the path `node_modules/@prisma/client` This file is used to define the database schema.
+
+### Create a configuration sheet to boot up the docker environment
+
+Now, we can create a `docker-compose.yaml` file in the root directory of the project. This file will be used to define the services that will be used to run the application.
+
+```yaml
+version: "3"
+services:
+  app:
+    build: .
+    container_name: todo-app
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/todoapp
+      - JWT_SECRET=your_jwt_secret_key
+      - NODE_ENV=development
+      - PORT=5000
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres:13-alpine
+    container_name: postgres-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: todoapp
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:
+```
+
+This file is very important as it defines the services that will be used to run the application. The `app` service is used to run the application and the `db` service is used to run the PostgreSQL database.
+
+You can learn more about the `docker-compose.yaml` file and the services used in the file from the [Docker documentation](https://docs.docker.com/compose/compose-file/)
