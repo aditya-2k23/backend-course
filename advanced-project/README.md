@@ -552,6 +552,19 @@ router.post("/register", async (req, res) => {
 });
 ```
 
-We have added a check to see if the username already exists in the database. If the username already exists, we return a 409 status code with a message saying "Username already exists". This will prevent the error from occurring.
+We have added a check to see if the username already exists in the database. If the username already exists, we return a `409` status code with a message saying **"Username already exists"**. This will prevent the error from occurring.
 
-Also, we have updated the status code to 201 to indicate that a new resource has been created.
+Also, we have updated the status code to `201` to indicate that a new resource has been created.
+
+### Changes Made
+
+#### Check for Existing User:
+
+- Used `prisma.user.findUnique` to check if the username already exists.
+- If it does, return `409` Conflict with a meaningful error message.
+
+#### Avoid Unnecessary Insert:
+
+- The `user.create` method is only called if no existing user is found.
+
+With this, you should be able to register a new user without any errors. You can now test the application by registering a new user and creating a new todo.
