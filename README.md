@@ -66,7 +66,6 @@ Follow the README.md file in the [advanced-project](advanced-project) folder onc
 - **Comprehensive**: Covers both foundational and advanced backend development topics.
 - **Hands-On Learning**: Practical projects to reinforce your understanding.
 - **Collaborative**: Developed by Aditya and Smoljames, ensuring high-quality content and support.
-- **Community Support**: Join our community to connect with other learners and share your progress.
 
 ---
 
@@ -81,12 +80,12 @@ This course is a collaboration between **Aditya** and **Smoljames**. Special tha
 
 ## Get Started Now
 
-Begin your backend development journey today by diving into the [basics](basics) section and follow the instructions provided in the README.md file!
+Begin your backend development journey today by diving into the [basics](basics) section and following the instructions in the README.md file!
 Feel free to explore, experiment, and learn at your own pace.
 
 We hope you enjoy the course and look forward to seeing the amazing projects you'll build!
 
 Don't forget to share your progress with us and connect with other learners in the community.
-You can also give a star to this repository if you find it helpful. 🌟
+You can also give a star to this repository if you find it helpful to you. 🌟
 
 Happy coding! 🚀
