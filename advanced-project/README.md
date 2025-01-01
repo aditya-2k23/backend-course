@@ -568,3 +568,25 @@ Also, we have updated the status code to `201` to indicate that a new resource h
 - The `user.create` method is only called if no existing user is found.
 
 With this, you should be able to register a new user without any errors. You can now test the application by registering a new user and creating a new todo.
+
+## Conclusion
+
+### In this project, we learned:
+
+- How to create a full-stack TODO application using `express`, `prisma`, `jwt`, `bcrypt`, `postgresql`, and `docker`.
+- Using Prisma to define the database schema.
+- Using Prisma to create, read, update, and delete data from the database.
+- Building and running the application as a container using Docker.
+- Using Docker Compose to define the services that will be used to run the application.
+- Generating a Prisma config file.
+- Running Prisma migrations to create the database schema and tables.
+- Building the application with Docker.
+- Running the application with Docker.
+- Starting the application and the database with Docker Compose.
+- Running the application on a local machine using Docker Desktop.
+
+#### This project is a great way to learn how to build a full-stack application using modern technologies and tools. You can use this project as a starting point to build more complex applications and learn more about full-stack development.
+
+---
+
+This is the end of the project. If you have any queries or suggestions, feel free to reach out to me on [Twitter](https://twitter.com/Tema_roon), [LinkedIn](https://www.linkedin.com/in/aditya-2k23/), or in here [GitHub](https://www.github.com/aditya-2k23).
