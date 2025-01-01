@@ -444,7 +444,7 @@ You need to install docker desktop and sign up for a docker account to use docke
 Then you can run the following command to build the application:
 
 ```bash
-docker-compose build
+docker compose build
 ```
 
 This command will build the application and create a new Docker image for the application.
@@ -453,5 +453,15 @@ Under the hood, it will run all the commands defined in the `Dockerfile` to buil
 After the build is successful, you can run the following command to start the application:
 
 ```bash
-
+docker compose run app npx prisma migrate dev --name init
 ```
+
+This command will run the Prisma migration to create the database schema and the tables in the database. The `--name init` flag is used to name the migration.
+
+After the migration is successful, you can run the following command to start the application:
+
+```bash
+docker compose up
+```
+
+This command will start the application and the database. The application will be running on `http://localhost:5000`. You can open this URL in your browser to see the application running.
