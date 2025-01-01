@@ -434,3 +434,24 @@ volumes:
 This file is very important as it defines the services that will be used to run the application. The `app` service is used to run the application and the `db` service is used to run the PostgreSQL database.
 
 You can learn more about the `docker-compose.yaml` file and the services used in the file from the [Docker documentation](https://docs.docker.com/compose/compose-file/)
+
+### Run the application
+
+Now, with docker desktop running on your local machine, learn more about docker desktop from the [Docker documentation](https://docs.docker.com/desktop/)
+
+You need to install docker desktop and sign up for a docker account to use docker desktop.
+
+Then you can run the following command to build the application:
+
+```bash
+docker-compose build
+```
+
+This command will build the application and create a new Docker image for the application.
+Under the hood, it will run all the commands defined in the `Dockerfile` to build the image.
+
+After the build is successful, you can run the following command to start the application:
+
+```bash
+
+```
