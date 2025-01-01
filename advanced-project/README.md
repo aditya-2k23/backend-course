@@ -587,6 +587,63 @@ With this, you should be able to register a new user without any errors. You can
 
 #### This project is a great way to learn how to build a full-stack application using modern technologies and tools. You can use this project as a starting point to build more complex applications and learn more about full-stack development.
 
+## Some more information about `SQL` queries using `docker exec`
+
+#### To run a SQL query in the PostgreSQL database container, you can use the `docker exec` command to run the `psql` command in the container.
+
+```bash
+docker exec -it postgres-db psql -U postgres -d todoapp
+```
+
+This command will open the `psql` command prompt in the PostgreSQL database container. You can now run SQL commands in the container.
+
+```bash
+\dt
+```
+
+This command will list all the tables in the database.
+Which in our case will be:
+
+```bash
+todoapp=# \dt
+               List of relations
+ Schema |        Name        | Type  |  Owner
+--------+--------------------+-------+----------
+ public | Todo               | table | postgres
+ public | User               | table | postgres
+ public | _prisma_migrations | table | postgres
+(3 rows)
+```
+
+You can now run SQL queries in the container to interact with the database.
+
+```bash
+SELECT * FROM "Todo";
+```
+
+This command will select all the rows from the `Todo` table in the database.
+
+```bash
+todoapp=# SELECT * FROM "Todo";
+ id |                    task                     | completed | userId
+----+---------------------------------------------+-----------+--------
+  4 | Hello hello@gmail.com! Add your first todo! | f         |      3
+  5 | Hello hlo@gmail.com! Add your first todo!   | t         |      5
+(2 rows)
+```
+
+We can get out of the `psql` command prompt by typing `\q` and pressing `Enter`.
+
+```bash
+todoapp=# \q
+```
+
+This will exit the `psql` command prompt and return you to the terminal.
+
+#### We can log in and run whole lot of CRUD actions using SQL commands directly from the database container and all the changes will be reflected in the frontend of the application.
+
 ---
+
+## End of the Project
 
 This is the end of the project. If you have any queries or suggestions, feel free to reach out to me on [Twitter](https://twitter.com/Tema_roon), [LinkedIn](https://www.linkedin.com/in/aditya-2k23/), or in here [GitHub](https://www.github.com/aditya-2k23).
