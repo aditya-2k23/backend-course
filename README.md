@@ -89,3 +89,23 @@ Don't forget to share your progress with us and connect with other learners in t
 You can also give a star to this repository if you find it helpful to you. 🌟
 
 Happy coding! 🚀
+
+---
+
+## Get Help and Support
+
+If you have any questions, feedback, or need assistance, feel free to reach out to us:
+
+**Aditya**:
+
+- [GitHub](https://www.gihub.com/aditya-2k23)
+- [LinkedIn](https://www.linkedin.com/in/aditya-2k23)
+- [Twitter](https://www.twitter.com/Tema_roon)
+
+**Smoljames**:
+
+- [GitHub](https://github.com/jamezmca)
+- [LinkedIn](https://www.linkedin.com/in/jamezmcarthur/)
+- [Twitter](https://twitter.com/_Smoljames)
+- [Discord](https://discord.gg/BYr6gujs4k)
+- [YouTube](https://www.youtube.com/c/Smoljames)
