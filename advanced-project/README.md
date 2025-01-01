@@ -380,3 +380,15 @@ import db from "../db.js"; // We don't have to delete the `db.js` file, we just 
 ```
 
 So, by this, we are almost ready to build our container.
+
+#### One, last thing we need to do is to finalize the prisma setup.
+
+### Prisma setup
+
+We need to generate a config file for Prisma to use. We can do this by running the following command:
+
+```bash
+npx prisma generate
+```
+
+This command will generate a new file called `prisma/schema.prisma` and it will be saved on the path `node_modules/@prisma/client` This file is used to define the database schema.
