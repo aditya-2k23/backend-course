@@ -465,3 +465,93 @@ docker compose up
 ```
 
 This command will start the application and the database. The application will be running on `http://localhost:5000`. You can open this URL in your browser to see the application running.
+
+## Important Note
+
+So, when I checked the working of this application and tried registering for a new user, I got an error saying:
+
+```bash
+todo-app     |   id: 1,
+todo-app     |   username: 'adi@gmail.com',
+todo-app     |   password: '$2a$08$AOgafwK.VNHavrVvKJnjUOkHLC5sFW781OeKEMiG9OlmdK48cIice'
+todo-app     | }
+todo-app     | hello@gmail.com 123123123
+todo-app     | node:_http_outgoing:699
+todo-app     |     throw new ERR_HTTP_HEADERS_SENT('set');
+todo-app     |           ^
+todo-app     |
+todo-app     | Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client
+todo-app     |     at ServerResponse.setHeader (node:_http_outgoing:699:11)
+todo-app     |     at ServerResponse.header (/app/node_modules/express/lib/response.js:794:10)
+todo-app     |     at ServerResponse.contentType (/app/node_modules/express/lib/response.js:624:15)
+todo-app     |     at ServerResponse.sendStatus (/app/node_modules/express/lib/response.js:373:8)
+todo-app     |     at file:///app/src/routes/authRoutes.js:51:7 {
+todo-app     |   code: 'ERR_HTTP_HEADERS_SENT'
+todo-app     | }
+todo-app     |
+todo-app     | Node.js v22.12.0
+```
+
+You might also encounter this error, so to fix this error, you need to update the `authRoutes.js` file.
+
+### Update the register endpoint in `authRoutes.js` file
+
+```javascript
+router.post("/register", async (req, res) => {
+  const { username, password } = req.body;
+  console.log(username, password);
+
+  // TODO encrypt the password using bcrypt
+  const hashedPassword = bcrypt.hashSync(password, 8);
+
+  try {
+    // Check if the username already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { username },
+    });
+
+    if (existingUser) {
+      return res.status(409).json({ message: "Username already exists" });
+    }
+
+    // Save the new user and the password to the db
+    const user = await prisma.user.create({
+      data: {
+        username,
+        password: hashedPassword,
+      },
+    });
+
+    // We have a user now, let's add a default todo for the users
+    const defaultTodo = `Hello ${username}! Add your first todo!`;
+
+    await prisma.todo.create({
+      data: {
+        task: defaultTodo,
+        userId: user.id,
+      },
+    });
+
+    // Create a JWT token
+    const token = jwt.sign(
+      {
+        id: user.id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "24h",
+      }
+    );
+
+    // Send the token back to the client
+    res.status(201).json({ token }); // Use 201 to indicate resource creation
+  } catch (error) {
+    console.log(error.message);
+    res.sendStatus(503); // 503: Service Unavailable
+  }
+});
+```
+
+We have added a check to see if the username already exists in the database. If the username already exists, we return a 409 status code with a message saying "Username already exists". This will prevent the error from occurring.
+
+Also, we have updated the status code to 201 to indicate that a new resource has been created.
